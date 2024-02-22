@@ -1,0 +1,85 @@
+body {
+    background-image: url(..//img/homer.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+
+#Logo {
+    background-color: rgb(230, 115, 15);
+    border: 2px solid black;
+    width: 75px;
+    height: 50px;
+    padding-left: 25px;
+    position: absolute;
+
+}
+img{
+    height: 50px;
+    width: 50px;
+}
+
+#score{
+    background-color: grey;
+    border: 2px solid black;
+    width: 25px;
+    height: 50px;
+    font-size: 15px;
+    padding-left: 15px;
+    position: absolute;
+    left: 100px;
+}
+
+#Logo2{
+    background-color: rgb(32, 5, 113);
+    border: 2px solid black;
+    width: 75px;
+    height: 50px;
+    padding-left: 25px;
+    position: absolute;
+    left: 140px;
+}
+
+#score2{
+    background-color: grey;
+    border: 2px solid black;
+    width: 25px;
+    height: 50px;
+    font-size: 15px;
+    padding-left: 15px;
+    position: absolute;
+    left: 240px;
+}
+
+#Final{
+    background:linear-gradient(to right,rgb(124, 122, 122),rgb(27, 27, 27));
+    border: 2px solid black;
+    width: 272px;
+    height: 25px;
+    font-size: medium;
+    position: absolute;
+    top: 65px;
+    padding-bottom: 20px;
+    text-align: center;
+    
+}
+
+
+#Copyright{
+    background-color: black;
+    color: white;
+    border: 2px solid black;
+    width: 600px;
+    height: 100px;
+    font-size: 15px;
+    padding-left: 15px;
+    position: absolute;
+    bottom: 10px;
+    left: 800px;
+    
+}
+
+
+
+
+
