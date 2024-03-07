@@ -1,0 +1,60 @@
+body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: pink;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+nav{
+    height: 50vh;
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    height:20px;
+    background-color: red;
+}
+nav a{
+    width:10vw;
+    text-align: center;
+    text-decoration: none;
+    color:grey;
+}
+
+
+img{
+    width:30vw;
+    height: 30vh;
+    animation-duration: 2s;
+    animation-name: animateChris;
+    animation-iteration-count: 1;
+}
+
+#red-ball{
+    background-color: indigo;
+    width: 20px;
+    height:20px;
+    border-radius: 50%;
+    position: absolute;
+    left:5vw;
+    top:0;
+    transition: width 2s, height 2s;
+}
+
+#red-ball:hover{
+    width: 200px;
+    height: 200px;
+    background-color: aquamarine;
+}
+
+@keyframes animateChris {
+    from{
+    margin-left: 100%;
+    rotate: 360deg;
+   }
+
+    to{
+    width:30vw;
+    height: 30vh;
+    margin-left: 0%;
+    }
+}
