@@ -62,7 +62,6 @@ nav a:hover {
 .info-text {
     margin: 0 auto;
     padding-top: 20px;
-    max-width: auto;
     display: flex;
     flex-direction: row;
     padding-right: 250px;
