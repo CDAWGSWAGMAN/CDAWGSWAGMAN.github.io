@@ -4,39 +4,50 @@ btn.addEventListener('click', getQuote);
 const answerBtn = document.querySelector('#js-tweet');
 answerBtn.addEventListener('click', getAnswer);
 
-const answerText = document.querySelector('#js-answer-text');
-const endpoint = "https://trivia.cyberwisp.com/getrandomchristmasquestion"
+const wordCountBtn = document.querySelector('#js-word-count');
+wordCountBtn.addEventListener('click', showWordCount);
 
-let answer ='';
+const authorText = document.querySelector('#js-author-text');
+const quoteText = document.querySelector("#js-quote-text");
+const wordCountDisplay = document.querySelector("#js-word-count-display");
+const endpoint = "https://api.quotable.io/random";
+
+let quote = '';
+let author = '';
 
 async function getQuote() {
     try {
-        
+        authorText.textContent = '';
+        authorText.classList.add('hidden');
+
+        wordCountDisplay.textContent = ''; // Clear word count display
+
         const response = await fetch(endpoint);
         if (!response.ok) {
-            throw Error(response.statusText)
+            throw Error(response.statusText);
         }
         const json = await response.json();
-        console.log(json['question']);
-        displayQuote(json['question']);
-        console.log(json['answer']);
-        answer = json['answer'];
-        answerText.textContent = '';
+        quote = json.content;
+        author = json.author;
+        displayQuote();
     } catch (err) {
         console.log(err);
-        alert('Failed to fetch new quote')
+        alert('Failed to fetch new quote');
     }
-
 }
 
 function getAnswer() {
-    answerText.textContent = answer;
+    authorText.textContent = `- ${author}`;
+    authorText.classList.remove('hidden');
 }
 
-function displayQuote(quote) {
-    const quoteText = document.querySelector
-    ("#js-quote-text");
-    quoteText.textContent = quote;
+function displayQuote() {
+    quoteText.textContent = `"${quote}"`;
+}
+
+function showWordCount() {
+    const words = quote.split(/\s+/).length;
+    wordCountDisplay.textContent = `Word Count: ${words}`;
 }
 
 getQuote();
