@@ -45,22 +45,18 @@ class Ball {
                 const distance = Math.sqrt(dx * dx + dy * dy);
     
                 if (distance < this.size + ball.size) {
-                    // Calculate angle of collision
                     const angle = Math.atan2(dy, dx);
     
-                    // Calculate new velocities using trigonometry
                     const thisVelX = this.velX * Math.cos(angle) + this.velY * Math.sin(angle);
                     const thisVelY = this.velY * Math.cos(angle) - this.velX * Math.sin(angle);
                     const ballVelX = ball.velX * Math.cos(angle) + ball.velY * Math.sin(angle);
                     const ballVelY = ball.velY * Math.cos(angle) - ball.velX * Math.sin(angle);
     
-                    // Swap velocities to simulate bouncing off each other
                     this.velX = ballVelX;
                     this.velY = ballVelY;
                     ball.velX = thisVelX;
                     ball.velY = thisVelY;
     
-                    // Move balls slightly apart to avoid sticking together
                     const overlap = this.size + ball.size - distance;
                     const moveX = overlap * Math.cos(angle);
                     const moveY = overlap * Math.sin(angle);
