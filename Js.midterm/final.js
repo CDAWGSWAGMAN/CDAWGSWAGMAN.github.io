@@ -131,7 +131,7 @@ canvas.addEventListener('click', function(event) {
 function drawCount() {
     ctx.fillStyle = 'white';
     ctx.font = 'bold 24px Arial';
-    ctx.fillText(`Volume: ${count}`, 100, 50); // Adjust position as needed
+    ctx.fillText(`Volume: ${count}`, 1500, 50); // Adjust position as needed
 }
 
 
@@ -146,8 +146,8 @@ while (balls.length < 50) {
     
     random(0 + size, width - size),
     random(0 + size, height - size),
-    random(0, 5),
-    random(0, 5),
+    random(5, 10),
+    random(5, 10),
     randomRGB(),
     size,
     text

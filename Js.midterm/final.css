@@ -18,8 +18,7 @@ html, body {
     position: absolute;
     margin: 0;
     top: -4px;
-    right: 5px;
-  
-    color: transparent;
-    text-shadow: 0 0 4px white;
+    left: 5px;
+    text-align: center;
+    color: white;
   }
