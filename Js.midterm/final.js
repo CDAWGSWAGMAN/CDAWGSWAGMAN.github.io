@@ -47,36 +47,45 @@ class Ball {
         ctx.fillText(this.text, this.x, this.y);
     }
     collisionDetect() {
-        for (const ball of balls) {
-            if (this !== ball) {
-                const dx = ball.x - this.x;
-                const dy = ball.y - this.y;
-                const distance = Math.sqrt(dx * dx + dy * dy);
-    
-                if (distance < this.size + ball.size) {
-                    const angle = Math.atan2(dy, dx);
-    
-                    const thisVelX = this.velX * Math.cos(angle) + this.velY * Math.sin(angle);
-                    const thisVelY = this.velY * Math.cos(angle) - this.velX * Math.sin(angle);
-                    const ballVelX = ball.velX * Math.cos(angle) + ball.velY * Math.sin(angle);
-                    const ballVelY = ball.velY * Math.cos(angle) - ball.velX * Math.sin(angle);
-    
-                    this.velX = ballVelX;
-                    this.velY = ballVelY;
-                    ball.velX = thisVelX;
-                    ball.velY = thisVelY;
-    
-                    const overlap = this.size + ball.size - distance;
-                    const moveX = overlap * Math.cos(angle);
-                    const moveY = overlap * Math.sin(angle);
-                    this.x -= moveX / 2;
-                    this.y -= moveY / 2;
-                    ball.x += moveX / 2;
-                    ball.y += moveY / 2;
-                }
-            }
-        }
-    }
+      for (const ball of balls) {
+          if (this !== ball) {
+              const dx = ball.x - this.x;
+              const dy = ball.y - this.y;
+              const distance = Math.sqrt(dx * dx + dy * dy);
+  
+              if (distance < this.size + ball.size) {
+                  // Check if the collision involves a ball with different text values
+                  if (this.text !== ball.text) {
+                      // Switch text values
+                      const temp = this.text;
+                      this.text = ball.text;
+                      ball.text = temp;
+                  }
+  
+                  const angle = Math.atan2(dy, dx);
+  
+                  const thisVelX = this.velX * Math.cos(angle) + this.velY * Math.sin(angle);
+                  const thisVelY = this.velY * Math.cos(angle) - this.velX * Math.sin(angle);
+                  const ballVelX = ball.velX * Math.cos(angle) + ball.velY * Math.sin(angle);
+                  const ballVelY = ball.velY * Math.cos(angle) - ball.velX * Math.sin(angle);
+  
+                  this.velX = ballVelX;
+                  this.velY = ballVelY;
+                  ball.velX = thisVelX;
+                  ball.velY = thisVelY;
+  
+                  const overlap = this.size + ball.size - distance;
+                  const moveX = overlap * Math.cos(angle);
+                  const moveY = overlap * Math.sin(angle);
+                  this.x -= moveX / 2;
+                  this.y -= moveY / 2;
+                  ball.x += moveX / 2;
+                  ball.y += moveY / 2;
+              }
+          }
+      }
+  }
+  
     update() {
         if ((this.x + this.size) >= width) {
           this.velX = -(this.velX);
@@ -146,8 +155,8 @@ while (balls.length < 50) {
     
     random(0 + size, width - size),
     random(0 + size, height - size),
-    random(5, 10),
-    random(5, 10),
+    random(0, 1),
+    random(0, 1),
     randomRGB(),
     size,
     text
