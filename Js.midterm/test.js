@@ -71,7 +71,7 @@ class Ball {
                     const totalSpeed = thisSpeed + ballSpeed;
     
                     
-                    const maxSpeed = 7; 
+                    const maxSpeed = 10; 
     
                     
                     if (totalSpeed > maxSpeed) {
@@ -132,10 +132,18 @@ canvas.addEventListener('click', function(event) {
 
         if (distance <= ball.size) {
             if (ball.text === "+1" || ball.text === "+2" || ball.text === "+3") {
-                count += parseInt(ball.text);
-            } else if (ball.text === "-1" || ball.text === "-2" || ball.text === "-3") {
-                if (count > 0) {
+                // Check if adding the ball's value would make count exceed 100
+                if (count + parseInt(ball.text) <= 100) {
                     count += parseInt(ball.text);
+                } else {
+                    count = 100; // Set count to 100 if it would exceed 100
+                }
+            } else if (ball.text === "-1" || ball.text === "-2" || ball.text === "-3") {
+                // Check if subtracting the ball's value would make count negative
+                if (count + parseInt(ball.text) >= 0) {
+                    count += parseInt(ball.text);
+                } else {
+                    count = 0; // Set count to 0 if it would become negative
                 }
             }
             console.log("Count:", count);
@@ -143,13 +151,14 @@ canvas.addEventListener('click', function(event) {
     }
 });
 
+
 function drawCount() {
     ctx.fillStyle = 'darkorange';
     ctx.font = 'bold 36px Arial';
     ctx.fillText(`Volume: ${count}`, 1450, 35); 
 }
 
-const numberOfBalls = 50; 
+const numberOfBalls = 40; 
 const balls = [];
 
 // Define the number of balls for each direction
@@ -177,10 +186,10 @@ while (balls.length < numberOfBalls) {
     }
 
     const ball = new Ball(
-        random(0 + size, width - size),
-        random(0 + size, height - size),
+        random(size, width - size),
+        random(size, height - size),
         initialVelX,
-        random(-1, 1),
+        random(-2, 1),
         randomRGB(),
         size,
         text
