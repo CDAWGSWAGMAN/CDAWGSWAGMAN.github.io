@@ -54,13 +54,22 @@ class Ball {
               const distance = Math.sqrt(dx * dx + dy * dy);
   
               if (distance < this.size + ball.size) {
-                  // Check if the collision involves a ball with different text values
-                  if (this.text !== ball.text) {
-                      // Switch text values
-                      const temp = this.text;
-                      this.text = ball.text;
-                      ball.text = temp;
-                  }
+                  // Switch text values
+                  const tempText = this.text;
+                  this.text = ball.text;
+                  ball.text = tempText;
+  
+                  // Switch colors
+                  const tempColor = this.color;
+                  this.color = ball.color;
+                  ball.color = tempColor;
+  
+                  // Change velocity of the balls upon collision
+                  const changeSpeed = 0.01; // Adjust as needed
+                  this.velX *= (1 + changeSpeed);
+                  this.velY *= (1 + changeSpeed);
+                  ball.velX *= (1 + changeSpeed);
+                  ball.velY *= (1 + changeSpeed);
   
                   const angle = Math.atan2(dy, dx);
   
@@ -85,6 +94,7 @@ class Ball {
           }
       }
   }
+  
   
     update() {
         if ((this.x + this.size) >= width) {
@@ -155,8 +165,8 @@ while (balls.length < 50) {
     
     random(0 + size, width - size),
     random(0 + size, height - size),
-    random(0, 1),
-    random(0, 1),
+    random(0, 5),
+    random(0, 5),
     randomRGB(),
     size,
     text

@@ -1,0 +1,188 @@
+// Setup canvas
+let count = 0;
+const canvas = document.querySelector("canvas");
+const ctx = canvas.getContext("2d");
+const width = (canvas.width = window.innerWidth);
+const height = (canvas.height = window.innerHeight);
+
+// Function to generate random number
+function random(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+// Function to generate random color
+function randomRGB() {
+    return `rgb(${random(0, 255)},${random(0, 255)},${random(0, 255)})`;
+}
+
+class Ball {
+    constructor(x, y, velX, velY, color, size, text) {
+        this.x = x;
+        this.y = y;
+        this.velX = velX;
+        this.velY = velY;
+        this.color = color;
+        this.size = size;
+        this.text = text;
+    }
+
+    draw() {
+        ctx.beginPath();
+        ctx.fillStyle = this.color;
+        ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 16px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(this.text, this.x, this.y);
+    }
+
+    collisionDetect() {
+        for (const ball of balls) {
+            if (this !== ball) {
+                const dx = ball.x - this.x;
+                const dy = ball.y - this.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+    
+                if (distance < this.size + ball.size) {
+                    // Handle collision
+    
+                    // Swap text values
+                    const tempText = this.text;
+                    this.text = ball.text;
+                    ball.text = tempText;
+    
+                    // Swap colors
+                    const tempColor = this.color;
+                    this.color = ball.color;
+                    ball.color = tempColor;
+    
+                    // Change velocity of the balls upon collision
+                    const changeSpeed = 0.0001; // Adjust as needed
+                    this.velX *= (1 + changeSpeed);
+                    this.velY *= (1 + changeSpeed);
+                    ball.velX *= (1 + changeSpeed);
+                    ball.velY *= (1 + changeSpeed);
+    
+                    // Calculate total speed
+                    const thisSpeed = Math.sqrt(this.velX * this.velX + this.velY * this.velY);
+                    const ballSpeed = Math.sqrt(ball.velX * ball.velX + ball.velY * ball.velY);
+                    const totalSpeed = thisSpeed + ballSpeed;
+    
+                    // Define maximum speed
+                    const maxSpeed = 7; // Adjust as needed
+    
+                    // If total speed exceeds the maximum speed, scale down velocities
+                    if (totalSpeed > maxSpeed) {
+                        const scale = maxSpeed / totalSpeed;
+                        this.velX *= scale;
+                        this.velY *= scale;
+                        ball.velX *= scale;
+                        ball.velY *= scale;
+                    }
+    
+                    // Continue with collision resolution as before
+                    const angle = Math.atan2(dy, dx);
+                    const thisVelX = this.velX * Math.cos(angle) + this.velY * Math.sin(angle);
+                    const thisVelY = this.velY * Math.cos(angle) - this.velX * Math.sin(angle);
+                    const ballVelX = ball.velX * Math.cos(angle) + ball.velY * Math.sin(angle);
+                    const ballVelY = ball.velY * Math.cos(angle) - ball.velX * Math.sin(angle);
+    
+                    this.velX = ballVelX;
+                    this.velY = ballVelY;
+                    ball.velX = thisVelX;
+                    ball.velY = thisVelY;
+    
+                    const overlap = this.size + ball.size - distance;
+                    const moveX = overlap * Math.cos(angle);
+                    const moveY = overlap * Math.sin(angle);
+                    this.x -= moveX / 2;
+                    this.y -= moveY / 2;
+                    ball.x += moveX / 2;
+                    ball.y += moveY / 2;
+                }
+            }
+        }
+    }
+    
+    
+
+    update() {
+        if ((this.x + this.size) >= width || (this.x - this.size) <= 0) {
+            this.velX = -this.velX;
+        }
+
+        if ((this.y + this.size) >= height || (this.y - this.size) <= 0) {
+            this.velY = -this.velY;
+        }
+
+        this.x += this.velX;
+        this.y += this.velY;
+    }
+}
+
+// Add event listener for mouse clicks on the canvas
+canvas.addEventListener('click', function(event) {
+    const mouseX = event.clientX;
+    const mouseY = event.clientY;
+
+    for (const ball of balls) {
+        const dx = mouseX - ball.x;
+        const dy = mouseY - ball.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance <= ball.size) {
+            if (ball.text === "+1") {
+                count++;
+            } else if (ball.text === "-1") {
+                if (count > 0) {
+                    count--;
+                }
+            }
+            console.log("Count:", count);
+        }
+    }
+});
+
+function drawCount() {
+    ctx.fillStyle = 'darkorange';
+    ctx.font = 'bold 36px Arial';
+    ctx.fillText(`Volume: ${count}`, 1550, 50); // Adjust position as needed
+}
+
+const balls = [];
+
+while (balls.length < 50) {
+    const size = random(10, 20);
+    const text = Math.random() < 0.5 ? "+1" : "-1";
+    const ball = new Ball(
+        random(0 + size, width - size),
+        random(0 + size, height - size),
+        random(0, 5),
+        random(0, 5),
+        randomRGB(),
+        size,
+        text
+    );
+    balls.push(ball);
+}
+
+const backgroundImage = new Image();
+backgroundImage.src = 'background.webp'; 
+
+backgroundImage.onload = function() {
+    loop();
+};
+
+function loop() {
+    ctx.drawImage(backgroundImage, 0, 0, width, height);
+
+    for (const ball of balls) {
+        ball.draw();
+        ball.update();
+        ball.collisionDetect();
+    }
+    drawCount();
+    requestAnimationFrame(loop);
+}
