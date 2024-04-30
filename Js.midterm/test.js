@@ -1,16 +1,16 @@
-// Setup canvas
-let count = 0;
+
+let count = Math.floor(Math.random() * (80 - 20 + 1)) + 20;
 const canvas = document.querySelector("canvas");
 const ctx = canvas.getContext("2d");
 const width = (canvas.width = window.innerWidth);
 const height = (canvas.height = window.innerHeight);
 
-// Function to generate random number
+
 function random(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    return Math.random() * (max - min) + min; 
 }
 
-// Function to generate random color
+
 function randomRGB() {
     return `rgb(${random(0, 255)},${random(0, 255)},${random(0, 255)})`;
 }
@@ -32,7 +32,7 @@ class Ball {
         ctx.arc(this.x, this.y, this.size, 0, 2 * Math.PI);
         ctx.fill();
         ctx.fillStyle = 'white';
-        ctx.font = 'bold 16px Arial';
+        ctx.font = 'bold 24px Arial';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(this.text, this.x, this.y);
@@ -46,34 +46,34 @@ class Ball {
                 const distance = Math.sqrt(dx * dx + dy * dy);
     
                 if (distance < this.size + ball.size) {
-                    // Handle collision
+                    
     
-                    // Swap text values
+                    
                     const tempText = this.text;
                     this.text = ball.text;
                     ball.text = tempText;
     
-                    // Swap colors
+                    
                     const tempColor = this.color;
                     this.color = ball.color;
                     ball.color = tempColor;
     
-                    // Change velocity of the balls upon collision
-                    const changeSpeed = 0.0001; // Adjust as needed
+                    
+                    const changeSpeed = 0.0001; 
                     this.velX *= (1 + changeSpeed);
                     this.velY *= (1 + changeSpeed);
                     ball.velX *= (1 + changeSpeed);
                     ball.velY *= (1 + changeSpeed);
     
-                    // Calculate total speed
+                    
                     const thisSpeed = Math.sqrt(this.velX * this.velX + this.velY * this.velY);
                     const ballSpeed = Math.sqrt(ball.velX * ball.velX + ball.velY * ball.velY);
                     const totalSpeed = thisSpeed + ballSpeed;
     
-                    // Define maximum speed
-                    const maxSpeed = 7; // Adjust as needed
+                    
+                    const maxSpeed = 7; 
     
-                    // If total speed exceeds the maximum speed, scale down velocities
+                    
                     if (totalSpeed > maxSpeed) {
                         const scale = maxSpeed / totalSpeed;
                         this.velX *= scale;
@@ -82,7 +82,7 @@ class Ball {
                         ball.velY *= scale;
                     }
     
-                    // Continue with collision resolution as before
+                    
                     const angle = Math.atan2(dy, dx);
                     const thisVelX = this.velX * Math.cos(angle) + this.velY * Math.sin(angle);
                     const thisVelY = this.velY * Math.cos(angle) - this.velX * Math.sin(angle);
@@ -105,24 +105,22 @@ class Ball {
             }
         }
     }
-    
-    
 
     update() {
         if ((this.x + this.size) >= width || (this.x - this.size) <= 0) {
             this.velX = -this.velX;
         }
-
+    
         if ((this.y + this.size) >= height || (this.y - this.size) <= 0) {
             this.velY = -this.velY;
         }
-
+    
         this.x += this.velX;
         this.y += this.velY;
     }
 }
 
-// Add event listener for mouse clicks on the canvas
+
 canvas.addEventListener('click', function(event) {
     const mouseX = event.clientX;
     const mouseY = event.clientY;
@@ -133,11 +131,11 @@ canvas.addEventListener('click', function(event) {
         const distance = Math.sqrt(dx * dx + dy * dy);
 
         if (distance <= ball.size) {
-            if (ball.text === "+1") {
-                count++;
-            } else if (ball.text === "-1") {
+            if (ball.text === "+1" || ball.text === "+2" || ball.text === "+3") {
+                count += parseInt(ball.text);
+            } else if (ball.text === "-1" || ball.text === "-2" || ball.text === "-3") {
                 if (count > 0) {
-                    count--;
+                    count += parseInt(ball.text);
                 }
             }
             console.log("Count:", count);
@@ -148,25 +146,49 @@ canvas.addEventListener('click', function(event) {
 function drawCount() {
     ctx.fillStyle = 'darkorange';
     ctx.font = 'bold 36px Arial';
-    ctx.fillText(`Volume: ${count}`, 1550, 50); // Adjust position as needed
+    ctx.fillText(`Volume: ${count}`, 1450, 35); 
 }
 
+const numberOfBalls = 50; 
 const balls = [];
 
-while (balls.length < 50) {
-    const size = random(20, 30);
-    const text = Math.random() < 0.5 ? "+1" : "-1";
+// Define the number of balls for each direction
+const numberOfBallsLeft = Math.floor(numberOfBalls / 2);
+const numberOfBallsRight = numberOfBalls - numberOfBallsLeft;
+
+while (balls.length < numberOfBalls) {
+    const size = random(30, 50);
+    let text;
+    const randomNumber = Math.random();
+
+    // Divide the balls into two groups based on their index
+    const initialVelX = balls.length < numberOfBallsLeft ? random(-5, 0) : random(0, 5); 
+    
+    if (randomNumber < 0.2) { 
+        text = "+1";
+    } else if (randomNumber < 0.4) { 
+        text = "-1";
+    } else if (randomNumber < 0.6) { 
+        text = "+2";
+    } else if (randomNumber < 0.8) { 
+        text = "-2";
+    } else { 
+        text = random(0, 1) === 0 ? "+3" : "-3"; 
+    }
+
     const ball = new Ball(
         random(0 + size, width - size),
         random(0 + size, height - size),
-        random(0, 5),
-        random(0, 5),
+        initialVelX,
+        random(-1, 1),
         randomRGB(),
         size,
         text
     );
     balls.push(ball);
 }
+
+
 
 const backgroundImage = new Image();
 backgroundImage.src = 'background.webp'; 
